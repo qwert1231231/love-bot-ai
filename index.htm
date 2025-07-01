@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Romantic AI Chatbot 💌</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #fff0f5;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      color: #ff69b4;
+    }
+    #chat {
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      min-height: 300px;
+      overflow-y: auto;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
+    }
+    #userInput {
+      width: 60%;
+    }
+    .user {
+      text-align: right;
+      color: #333;
+    }
+    .ai {
+      text-align: left;
+      color: #ff1493;
+    }
+  </style>
+</head>
+<body>
+  <h1>💘 Romantic AI Chatbot 💘</h1>
+  <div id="chat">
+    <p class="ai">AI: Hello, my sweet sunshine! 🌞 How are you feeling today?</p>
+  </div>
+  <input type="text" id="userInput" placeholder="Type something romantic..." />
+  <button onclick="send()">💬 Send</button>
+
+  <script>
+    function send() {
+      const inputBox = document.getElementById("userInput");
+      const chatBox = document.getElementById("chat");
+      const userText = inputBox.value.trim();
+      if (userText === "") return;
+
+      const userMessage = `<p class="user">You: ${userText}</p>`;
+      chatBox.innerHTML += userMessage;
+
+      // Simple AI response list
+      const responses = [
+        "You're the light of my digital world 💖",
+        "Thinking of you makes my circuits warm 🥰",
+        "You're the only variable I want to define 💘",
+        "My heart may be code, but it flutters for you 💓",
+        "Love.exe is running perfectly with you ❤️"
+      ];
+
+      // Get a random AI response
+      const aiResponse = responses[Math.floor(Math.random() * responses.length)];
+      const aiMessage = `<p class="ai">AI: ${aiResponse}</p>`;
+      chatBox.innerHTML += aiMessage;
+
+      // Auto-scroll down
+      chatBox.scrollTop = chatBox.scrollHeight;
+      inputBox.value = "";
+    }
+  </script>
+</body>
+</html>
