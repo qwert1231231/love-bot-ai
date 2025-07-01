@@ -1,85 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css">
-  <meta charset="UTF-8">
-  <title>Romantic AI Chatbot 💌</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: #fff0f5;
-      text-align: center;
-      padding: 40px;
-    }
-    h1 {
-      color: #ff69b4;
-    }
-    #chat {
-      width: 90%;
-      max-width: 600px;
-      margin: 20px auto;
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      min-height: 300px;
-      overflow-y: auto;
-    }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      margin: 5px;
-    }
-    #userInput {
-      width: 60%;
-    }
-    .user {
-      text-align: right;
-      color: #333;
-    }
-    .ai {
-      text-align: left;
-      color: #ff1493;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Romantic AI Chatbot</title>
+<style>
+  /* Reset */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #202123;
+    color: #e6e6e6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 1rem;
+    background-color: #343541;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #fff;
+  }
+
+  #chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: #343541;
+  }
+
+  .message {
+    max-width: 70%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+  }
+
+  .message.user {
+    background-color: #005aff;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+
+  .message.ai {
+    background-color: #444654;
+    color: #e6e6e6;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+
+  #input-form {
+    display: flex;
+    padding: 1rem;
+    background-color: #343541;
+    border-top: 1px solid #444654;
+  }
+
+  #userInput {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background-color: #202123;
+    color: white;
+    outline: none;
+  }
+
+  #sendBtn {
+    background-color: #10a37f;
+    border: none;
+    margin-left: 0.5rem;
+    padding: 0 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  #sendBtn:hover:not(:disabled) {
+    background-color: #0d7a60;
+  }
+
+  #sendBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
 </head>
 <body>
-  <h1>💘 Romantic AI Chatbot 💘</h1>
-  <div id="chat">
-    <p class="ai">AI: Hello, my sweet sunshine! 🌞 How are you feeling today?</p>
-  </div>
-  <input type="text" id="userInput" placeholder="Type something romantic..." />
-  <button onclick="send()">💬 Send</button>
+  <header>💘 Romantic AI Chatbot 💘</header>
+
+  <div id="chat-container" aria-live="polite" role="log"></div>
+
+  <form id="input-form" onsubmit="return send(event);">
+    <input
+      id="userInput"
+      type="text"
+      autocomplete="off"
+      placeholder="Type your romantic message..."
+      required
+      aria-label="Type your romantic message"
+    />
+    <button type="submit" id="sendBtn">Send</button>
+  </form>
 
   <script>
-    function send() {
-      const inputBox = document.getElementById("userInput");
-      const chatBox = document.getElementById("chat");
-      const userText = inputBox.value.trim();
-      if (userText === "") return;
+    const chatContainer = document.getElementById('chat-container');
+    const inputForm = document.getElementById('input-form');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
 
-      const userMessage = `<p class="user">You: ${userText}</p>`;
-      chatBox.innerHTML += userMessage;
+    // Simple AI replies (replace with API calls)
+    const responses = [
+      "You're the light of my digital world 💖",
+      "Thinking of you makes my circuits warm 🥰",
+      "You're the only variable I want to define 💘",
+      "My heart may be code, but it flutters for you 💓",
+      "Love.exe is running perfectly with you ❤️"
+    ];
 
-      // Simple AI response list
-      const responses = [
-        "You're the light of my digital world 💖",
-        "Thinking of you makes my circuits warm 🥰",
-        "You're the only variable I want to define 💘",
-        "My heart may be code, but it flutters for you 💓",
-        "Love.exe is running perfectly with you ❤️"
-      ];
-
-      // Get a random AI response
-      const aiResponse = responses[Math.floor(Math.random() * responses.length)];
-      const aiMessage = `<p class="ai">AI: ${aiResponse}</p>`;
-      chatBox.innerHTML += aiMessage;
-
-      // Auto-scroll down
-      chatBox.scrollTop = chatBox.scrollHeight;
-      inputBox.value = "";
+    function appendMessage(text, sender) {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message', sender);
+      messageDiv.textContent = text;
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     }
+
+    async function send(event) {
+      event.preventDefault();
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      // Show user message
+      appendMessage(message, 'user');
+      userInput.value = '';
+      sendBtn.disabled = true;
+
+      // Show loading AI message
+      const loadingMessage = document.createElement('div');
+      loadingMessage.classList.add('message', 'ai');
+      loadingMessage.textContent = 'AI is typing...';
+      chatContainer.appendChild(loadingMessage);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      // Simulate API call delay
+      await new Promise(r => setTimeout(r, 1000));
+
+      // Replace loading with AI reply
+      loadingMessage.remove();
+
+      // Pick random AI reply (replace with real API call)
+      const aiReply = responses[Math.floor(Math.random() * responses.length)];
+      appendMessage(aiReply, 'ai');
+
+      sendBtn.disabled = false;
+      userInput.focus();
+    }
+
+    // Focus input on page load
+    userInput.focus();
   </script>
-  <script src="script.js"></script>
 </body>
 </html>
