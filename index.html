@@ -1,105 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Romantic AI Chatbot</title>
-<style>
-  /* Reset */
-  * {
-    box-sizing: border-box;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Romantic AI Chatbot</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  body {
-    background-color: #202123;
-    color: #e6e6e6;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+    body {
+      background-color: #202123;
+      color: #e6e6e6;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  header {
-    padding: 1rem;
-    background-color: #343541;
-    text-align: center;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: #fff;
-  }
+    header {
+      padding: 1rem;
+      background-color: #343541;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #fff;
+      border-bottom: 1px solid #444654;
+    }
 
-  #chat-container {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem;
-    background-color: #343541;
-  }
+    #chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      background-color: #343541;
+      display: flex;
+      flex-direction: column;
+    }
 
-  .message {
-    max-width: 70%;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 12px;
-    line-height: 1.4;
-    white-space: pre-wrap;
-  }
+    .message {
+      max-width: 70%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
 
-  .message.user {
-    background-color: #005aff;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-  }
+    .message.user {
+      background-color: #005aff;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
 
-  .message.ai {
-    background-color: #444654;
-    color: #e6e6e6;
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-  }
+    .message.ai {
+      background-color: #444654;
+      color: #e6e6e6;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
 
-  #input-form {
-    display: flex;
-    padding: 1rem;
-    background-color: #343541;
-    border-top: 1px solid #444654;
-  }
+    #input-form {
+      display: flex;
+      padding: 1rem;
+      background-color: #343541;
+      border-top: 1px solid #444654;
+    }
 
-  #userInput {
-    flex: 1;
-    border: none;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    background-color: #202123;
-    color: white;
-    outline: none;
-  }
+    #userInput {
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      background-color: #202123;
+      color: white;
+      outline: none;
+    }
 
-  #sendBtn {
-    background-color: #10a37f;
-    border: none;
-    margin-left: 0.5rem;
-    padding: 0 1.5rem;
-    border-radius: 8px;
-    color: white;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
+    #sendBtn {
+      background-color: #10a37f;
+      border: none;
+      margin-left: 0.5rem;
+      padding: 0 1.5rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
 
-  #sendBtn:hover:not(:disabled) {
-    background-color: #0d7a60;
-  }
+    #sendBtn:hover:not(:disabled) {
+      background-color: #0d7a60;
+    }
 
-  #sendBtn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-</style>
+    #sendBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
+
   <header>💘 Romantic AI Chatbot 💘</header>
 
   <div id="chat-container" aria-live="polite" role="log"></div>
@@ -108,27 +112,27 @@
     <input
       id="userInput"
       type="text"
+      placeholder="Type something romantic..."
       autocomplete="off"
-      placeholder="Type your romantic message..."
       required
-      aria-label="Type your romantic message"
+      aria-label="User message"
     />
     <button type="submit" id="sendBtn">Send</button>
   </form>
 
   <script>
     const chatContainer = document.getElementById('chat-container');
-    const inputForm = document.getElementById('input-form');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
 
-    // Simple AI replies (replace with API calls)
-    const responses = [
+    const replies = [
       "You're the light of my digital world 💖",
       "Thinking of you makes my circuits warm 🥰",
       "You're the only variable I want to define 💘",
       "My heart may be code, but it flutters for you 💓",
-      "Love.exe is running perfectly with you ❤️"
+      "Love.exe is running perfectly with you ❤️",
+      "You're my favorite notification 💌",
+      "I’d reply to you even in low battery mode 😘"
     ];
 
     function appendMessage(text, sender) {
@@ -139,38 +143,31 @@
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    async function send(event) {
+    function send(event) {
       event.preventDefault();
-      const message = userInput.value.trim();
-      if (!message) return;
 
-      // Show user message
-      appendMessage(message, 'user');
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      appendMessage(text, 'user');
       userInput.value = '';
       sendBtn.disabled = true;
 
-      // Show loading AI message
-      const loadingMessage = document.createElement('div');
-      loadingMessage.classList.add('message', 'ai');
-      loadingMessage.textContent = 'AI is typing...';
-      chatContainer.appendChild(loadingMessage);
+      const loading = document.createElement('div');
+      loading.classList.add('message', 'ai');
+      loading.textContent = 'AI is typing...';
+      chatContainer.appendChild(loading);
       chatContainer.scrollTop = chatContainer.scrollHeight;
 
-      // Simulate API call delay
-      await new Promise(r => setTimeout(r, 1000));
-
-      // Replace loading with AI reply
-      loadingMessage.remove();
-
-      // Pick random AI reply (replace with real API call)
-      const aiReply = responses[Math.floor(Math.random() * responses.length)];
-      appendMessage(aiReply, 'ai');
-
-      sendBtn.disabled = false;
-      userInput.focus();
+      setTimeout(() => {
+        loading.remove();
+        const reply = replies[Math.floor(Math.random() * replies.length)];
+        appendMessage(reply, 'ai');
+        sendBtn.disabled = false;
+        userInput.focus();
+      }, 1000);
     }
 
-    // Focus input on page load
     userInput.focus();
   </script>
 </body>
