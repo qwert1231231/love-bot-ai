@@ -5,30 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Romantic AI Chatbot</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       background-color: #202123;
       color: #e6e6e6;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
       height: 100vh;
       display: flex;
       flex-direction: column;
     }
-
     header {
       padding: 1rem;
       background-color: #343541;
       text-align: center;
-      font-weight: 700;
+      font-weight: bold;
       font-size: 1.5rem;
-      color: #fff;
-      border-bottom: 1px solid #444654;
+      color: white;
     }
-
     #chat-container {
       flex: 1;
       overflow-y: auto;
@@ -37,7 +31,6 @@
       display: flex;
       flex-direction: column;
     }
-
     .message {
       max-width: 70%;
       padding: 1rem;
@@ -47,28 +40,24 @@
       white-space: pre-wrap;
       word-wrap: break-word;
     }
-
-    .message.user {
+    .user {
       background-color: #005aff;
       color: white;
       align-self: flex-end;
       border-bottom-right-radius: 4px;
     }
-
-    .message.ai {
+    .ai {
       background-color: #444654;
       color: #e6e6e6;
       align-self: flex-start;
       border-bottom-left-radius: 4px;
     }
-
     #input-form {
       display: flex;
       padding: 1rem;
       background-color: #343541;
       border-top: 1px solid #444654;
     }
-
     #userInput {
       flex: 1;
       border: none;
@@ -79,7 +68,6 @@
       color: white;
       outline: none;
     }
-
     #sendBtn {
       background-color: #10a37f;
       border: none;
@@ -87,88 +75,84 @@
       padding: 0 1.5rem;
       border-radius: 8px;
       color: white;
-      font-weight: 700;
+      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.2s ease;
     }
-
-    #sendBtn:hover:not(:disabled) {
-      background-color: #0d7a60;
-    }
-
-    #sendBtn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    #sendBtn:hover { background-color: #0d7a60; }
+    #sendBtn:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
 
   <header>💘 Romantic AI Chatbot 💘</header>
-
-  <div id="chat-container" aria-live="polite" role="log"></div>
-
+  <div id="chat-container"></div>
   <form id="input-form" onsubmit="return send(event);">
-    <input
-      id="userInput"
-      type="text"
-      placeholder="Type something romantic..."
-      autocomplete="off"
-      required
-      aria-label="User message"
-    />
+    <input id="userInput" type="text" placeholder="Talk to your romantic AI..." required autocomplete="off"/>
     <button type="submit" id="sendBtn">Send</button>
   </form>
 
   <script>
-    const chatContainer = document.getElementById('chat-container');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
+    const API_KEY = "YOUR_OPENAI_API_KEY"; // ← replace with your real key
 
-    const replies = [
-      "You're the light of my digital world 💖",
-      "Thinking of you makes my circuits warm 🥰",
-      "You're the only variable I want to define 💘",
-      "My heart may be code, but it flutters for you 💓",
-      "Love.exe is running perfectly with you ❤️",
-      "You're my favorite notification 💌",
-      "I’d reply to you even in low battery mode 😘"
+    const chatContainer = document.getElementById("chat-container");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    let conversation = [
+      { role: "system", content: "You are a romantic, kind, smart AI who chats like a real person and makes the user feel loved and cared for." }
     ];
 
     function appendMessage(text, sender) {
-      const messageDiv = document.createElement('div');
-      messageDiv.classList.add('message', sender);
-      messageDiv.textContent = text;
-      chatContainer.appendChild(messageDiv);
+      const div = document.createElement("div");
+      div.className = `message ${sender}`;
+      div.textContent = text;
+      chatContainer.appendChild(div);
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    function send(event) {
+    async function send(event) {
       event.preventDefault();
 
       const text = userInput.value.trim();
       if (!text) return;
 
-      appendMessage(text, 'user');
-      userInput.value = '';
+      appendMessage(text, "user");
+      conversation.push({ role: "user", content: text });
+      userInput.value = "";
       sendBtn.disabled = true;
 
-      const loading = document.createElement('div');
-      loading.classList.add('message', 'ai');
-      loading.textContent = 'AI is typing...';
-      chatContainer.appendChild(loading);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+      appendMessage("AI is typing...", "ai");
 
-      setTimeout(() => {
-        loading.remove();
-        const reply = replies[Math.floor(Math.random() * replies.length)];
-        appendMessage(reply, 'ai');
-        sendBtn.disabled = false;
-        userInput.focus();
-      }, 1000);
+      try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo", // or "gpt-4o" if your key has access
+            messages: conversation,
+            temperature: 0.8,
+            max_tokens: 200
+          })
+        });
+
+        const data = await res.json();
+        const reply = data.choices[0].message.content;
+        conversation.push({ role: "assistant", content: reply });
+
+        document.querySelector(".ai:last-child").remove();
+        appendMessage(reply, "ai");
+
+      } catch (err) {
+        document.querySelector(".ai:last-child").remove();
+        appendMessage("Sorry, something went wrong 😢", "ai");
+        console.error(err);
+      }
+
+      sendBtn.disabled = false;
     }
-
-    userInput.focus();
   </script>
 </body>
 </html>
